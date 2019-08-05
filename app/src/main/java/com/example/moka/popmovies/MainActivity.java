@@ -36,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean which_menu=true;
 
     // needed data in api query
-    // you have to put Your api-key in  " TheMovieDBapiToke "
-    public final String TheMovieDBapiToke="############################";
+
     public final String language="en-US";
     //choosing the sort order "popular or TopRated"
     public boolean movie_popular=true;
@@ -86,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             try {
-                if(TheMovieDBapiToke==""){
-                    Toast.makeText(this, "Please get the api key first from themoviedb.org", Toast.LENGTH_SHORT).show();
+                if(BuildConfig.The_MovieDBapiToke.isEmpty()){
+                    Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else{
@@ -95,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
                     service myapi= new client().getRetrofit().create(service.class);
 
                     if(movie_popular)
-                        call=myapi.getpopularMovies(TheMovieDBapiToke,language,"1");
+                        call=myapi.getpopularMovies(BuildConfig.The_MovieDBapiToke,language,"1");
                     else
-                        call=myapi.getTopRatedMovies(TheMovieDBapiToke,language,"1");
+                        call=myapi.getTopRatedMovies(BuildConfig.The_MovieDBapiToke,language,"1");
 
                     call.enqueue(new Callback<MovieResults>() {
                         @Override

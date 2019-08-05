@@ -90,11 +90,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if(i!=RecyclerView.NO_POSITION){
                         movie movieclicked=List_Item.get(i);
                         Intent intent=new Intent(context,DetailActivity.class);
-                        intent.putExtra("original_title",movieclicked.getOriginalTitle());
-                        intent.putExtra("poster_path",movieclicked.getPosterPath());
-                        intent.putExtra("overview",movieclicked.getOverview());
-                        intent.putExtra("vote_average",movieclicked.getVoteAverage());
-                        intent.putExtra("release_date",movieclicked.getReleaseDate());
+                        intent.putExtra("movies",movieclicked);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }

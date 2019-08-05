@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.moka.popmovies.jsonmovie.movie;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -25,12 +26,17 @@ public class DetailActivity extends AppCompatActivity {
         releaseDate=(TextView)findViewById(R.id.Movie_release);
         img=(ImageView)findViewById(R.id.img_detail_movie);
 
-        if(intent.hasExtra("original_title")){
-            nameofmovie.setText(intent.getExtras().getString("original_title"));
-            plotsynopsis.setText(intent.getExtras().getString("overview"));
-            uesrRating.setText(Double.toString(intent.getExtras().getDouble("vote_average")));
-            releaseDate.setText(intent.getExtras().getString("release_date"));
-            String thumb=intent.getExtras().getString("poster_path");
+        SetupUI(intent);
+
+    }
+    public void SetupUI(Intent intent){
+        movie movi = getIntent().getParcelableExtra("movies");
+        if(intent.hasExtra("movies")){
+            nameofmovie.setText(movi.getOriginalTitle());
+            plotsynopsis.setText(movi.getOverview());
+            uesrRating.setText(Double.toString(movi.getVoteAverage()));
+            releaseDate.setText(movi.getReleaseDate());
+            String thumb=movi.getPosterPath();
             Glide.with(this)
                     .load(thumb)
 
@@ -39,7 +45,7 @@ public class DetailActivity extends AppCompatActivity {
         else{
             Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show();
         }
-        setTitle(intent.getExtras().getString("original_title"));
-
+        setTitle(movi.getOriginalTitle());
     }
 }
+
