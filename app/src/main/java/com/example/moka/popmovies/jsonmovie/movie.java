@@ -15,47 +15,59 @@ public class movie implements Parcelable
 
     @SerializedName("vote_count")
     @Expose
-    private Integer voteCount;
+    private Integer voteCount=0;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private Integer id=null;
     @SerializedName("video")
     @Expose
-    private Boolean video;
+    private Boolean video=false;
     @SerializedName("vote_average")
     @Expose
-    private Double voteAverage;
+    private Double voteAverage=0.0;
     @SerializedName("title")
     @Expose
-    private String title;
+    private String title="";
     @SerializedName("popularity")
     @Expose
-    private Double popularity;
+    private Double popularity=0.0;
     @SerializedName("poster_path")
     @Expose
-    private String posterPath;
+    public String posterPath="";
     @SerializedName("original_language")
     @Expose
-    private String originalLanguage;
+    private String originalLanguage="";
     @SerializedName("original_title")
     @Expose
-    private String originalTitle;
+    private String originalTitle="";
     @SerializedName("genre_ids")
     @Expose
     private List<Integer> genreIds = null;
     @SerializedName("backdrop_path")
     @Expose
-    private String backdropPath;
+    public String backdropPath="";
     @SerializedName("adult")
     @Expose
-    private Boolean adult;
+    private Boolean adult=false;
     @SerializedName("overview")
     @Expose
-    private String overview;
+    private String overview="";
     @SerializedName("release_date")
     @Expose
-    private String releaseDate;
+    private String releaseDate="";
     private final static long serialVersionUID = -6614350303280038261L;
+
+    @SerializedName("favorite")
+    @Expose
+    private Boolean favorite=false;
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
 
     public Integer getVoteCount() {
         return voteCount;
@@ -139,12 +151,12 @@ public class movie implements Parcelable
     }
 
     public String getBackdropPath() {
-        return backdropPath;
+
+        String base_img_url = "https://image.tmdb.org/t/p/w185";
+        return base_img_url +backdropPath;
     }
 
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
+    public void setBackdropPath(String backdropPath) {this.backdropPath = backdropPath;}
 
     public Boolean getAdult() {
         return adult;
@@ -191,6 +203,7 @@ public class movie implements Parcelable
         dest.writeValue(this.voteCount);
         dest.writeValue(this.video);
         dest.writeValue(this.voteAverage);
+        dest.writeValue(this.favorite);
     }
     protected movie(Parcel in) {
         this.posterPath = in.readString();
@@ -208,6 +221,8 @@ public class movie implements Parcelable
         this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
         this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
+        this.favorite = (Boolean) in.readValue(Boolean.class.getClassLoader());
+
     }
 
     public static final Parcelable.Creator<movie> CREATOR = new Parcelable.Creator<movie>() {
@@ -221,4 +236,11 @@ public class movie implements Parcelable
             return new movie[size];
         }
     };
+
+    public movie(){
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite=favorite;
+    }
 }

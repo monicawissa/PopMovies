@@ -1,4 +1,4 @@
-package com.example.moka.popmovies;
+package com.example.moka.popmovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.moka.popmovies.DetailActivity;
+import com.example.moka.popmovies.R;
 import com.example.moka.popmovies.jsonmovie.movie;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +27,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private int previousPosition = 0;
 
-    private List<movie> List_Item;
+    private List<movie> List_Item=new ArrayList<>();
     private Context context;
 
     public RecyclerViewAdapter(List<movie> list_Item, Context context) {
@@ -49,24 +51,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             menuItemHolder.Title.setText(List_Item.get(position).getTitle());
 
-            Glide.with(context)
+            Picasso.with(context)
                     .load(List_Item.get(position).getPosterPath())
+                    .placeholder(R.drawable.img_loading_cover)
+                    .error(R.drawable.img_loading_error)
                     .into(menuItemHolder.imageView);
 
 
-//                if (position > previousPosition) { //scrolling DOWN
-//                    AnimationUtil.animate(menuItemHolder, true);
-//
-//                } else { // scrolling UP
-//
-//                    AnimationUtil.animate(menuItemHolder, false);
-//                }
-//                previousPosition = position;
-
-
+    }
+    //Viewmodel**
+    public movie getmovieAt(int position){
+        return List_Item.get(position);
     }
 
-
+    //Viewmodel
+    public void setmovies(List<movie> movies) {
+        this.List_Item = movies;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return (null != List_Item ? List_Item.size() : 0);

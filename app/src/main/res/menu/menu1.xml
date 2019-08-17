@@ -33,5 +33,21 @@
         android:title="@string/popular_movies"
         app:showAsAction="never|withText"
         tools:targetApi="o" />
+    <item
+        android:id="@+id/favorite_menu"
+        android:checkable="true"
+        android:checked="false"
+        android:icon="@drawable/ic_star"
+        android:iconTint="#f45"
+        android:orderInCategory="3"
+        android:title="@string/Favorite_Movies"
+        app:showAsAction="never|withText"
+        tools:targetApi="o" />
+    <item
+        android:id="@+id/delete_all_favorite"
+        android:orderInCategory="4"
+        android:title="@string/delete_all_favorite"
+        app:showAsAction="never|withText"
+        tools:targetApi="o" />
 
 </menu>

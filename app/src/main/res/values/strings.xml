@@ -12,4 +12,19 @@
     <string name="average_rate">Average Rate :</string>
     <string name="api_NotFound">Please get the api key first from themoviedb.org</string>
 
+    <string name="desc_poster">Movie Poster</string>
+    <string name="desc_user">Review User Image</string>
+    <string name="desc_image">Trailer YouTube Image</string>
+    <string name="desc_youtube">YouTube Logo</string>
+    <string name="desc_cover">Cover Image</string>
+    <string name="cast">Cast :</string>
+    <string name="Trailers">Trailers :</string>
+    <string name="reviews">Reviews :</string>
+    <string name="trailer_title_tv">Trailer_title_tv</string>
+    <string name="Favorite_Movies">Favorite Movies</string>
+    <string name="pref_sort_order_key">view sort</string>
+    <string name="pref_most_popular">1</string>
+    <string name="null_data">No data..notes is null</string>
+    <string name="delete_all_favorite">Delete all Favorite</string>
+
 </resources>
