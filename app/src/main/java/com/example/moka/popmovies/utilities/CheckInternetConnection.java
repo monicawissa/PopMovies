@@ -1,4 +1,4 @@
-package com.example.moka.popmovies;
+package com.example.moka.popmovies.utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -23,4 +23,6 @@ public class CheckInternetConnection {
         }
         return false;
     }
+    // - context :Context
+    // + isConnectingToInternet() :boolean
 }

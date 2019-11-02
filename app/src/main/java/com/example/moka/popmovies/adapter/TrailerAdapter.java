@@ -83,4 +83,10 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.MyViewHo
 
         }
     }
+
+    //- trailerList : List<Trailer>
+    //- mContext: Context
+
+    //MyViewHolder
+    //- thumbnail :ImageView
 }

@@ -16,7 +16,6 @@ public interface service {
       @Query("api_key")String api_key,
       @Query("language")String lang,
       @Query("page")String page
-
       );
     @GET("movie/top_rated")
     Call<MovieResults> getTopRatedMovies(
@@ -42,4 +41,6 @@ public interface service {
             @Query("api_key")String api_key
 
     );
+
+
 }

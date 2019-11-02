@@ -46,7 +46,6 @@ public class ActorsAdapter extends RecyclerView.Adapter<ActorsAdapter.MyViewHold
                 .placeholder(R.drawable.img_loading_cover)
                 .error(R.drawable.img_loading_error)
                 .into(viewHolder.thumbnail);
-
     }
 
     @Override
@@ -66,4 +65,5 @@ public class ActorsAdapter extends RecyclerView.Adapter<ActorsAdapter.MyViewHold
             thumbnail = (ImageView) view.findViewById(R.id.image);
         }
     }
+
 }

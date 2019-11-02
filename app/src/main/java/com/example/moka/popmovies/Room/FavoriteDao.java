@@ -14,8 +14,6 @@ import java.util.List;
 @Dao
 public interface FavoriteDao {
 
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertFavorite(Favorite FavoriteEntry);
 

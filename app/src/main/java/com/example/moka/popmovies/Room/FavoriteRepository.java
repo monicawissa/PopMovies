@@ -22,7 +22,6 @@ public class FavoriteRepository {
     public void update(Favorite Favorite){
         new updateFavoriteAsyncTask(FavoriteDao).execute(Favorite);
     }
-
     public void deletetable(){
         new deleteallFavoriteAsyncTask(FavoriteDao).execute();
     }
@@ -32,14 +31,15 @@ public class FavoriteRepository {
     public void deletebyid(int id){
         new deleteFavoriteAsyncTask(FavoriteDao).execute(id);
     }
-
     public LiveData<List<Favorite>> getAllFavorite() {
         return allFavorite;
     }
+
     private static class insertFavoriteAsyncTask extends AsyncTask<Favorite,Void,Void> {
         private FavoriteDao FavoriteDao;
 
         private insertFavoriteAsyncTask(FavoriteDao FavoriteDao) {
+
             this.FavoriteDao = FavoriteDao;
         }
 
@@ -55,7 +55,6 @@ public class FavoriteRepository {
             Log.d("TAGGG_INSERT" , "Movie Inserted");
         }
     }
-
     private static class updateFavoriteAsyncTask extends AsyncTask<Favorite,Void,Void> {
         private FavoriteDao FavoriteDao;
 
@@ -69,7 +68,6 @@ public class FavoriteRepository {
             return null;
         }
     }
-
     private static class deleteFavoriteAsyncTask extends AsyncTask<Integer,Void,Void> {
         private FavoriteDao FavoriteDao;
 

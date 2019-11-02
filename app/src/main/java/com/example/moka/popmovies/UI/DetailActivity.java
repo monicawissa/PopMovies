@@ -1,4 +1,4 @@
-package com.example.moka.popmovies;
+package com.example.moka.popmovies.UI;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.moka.popmovies.BuildConfig;
+import com.example.moka.popmovies.utilities.CheckInternetConnection;
+import com.example.moka.popmovies.R;
 import com.example.moka.popmovies.Room.Favorite;
 import com.example.moka.popmovies.Room.FavoriteViewModel;
 import com.example.moka.popmovies.adapter.ActorsAdapter;
@@ -44,7 +46,7 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TrailerAdapter adapter;
     private List<Trailer> trailerList;
-    int movie_id;
+    private int movie_id;
 
     //Review recycleview
     private RecyclerView Review_recyclerView;
@@ -60,12 +62,14 @@ public class DetailActivity extends AppCompatActivity {
 
     TextView nameofmovie, plotsynopsis, uesrRating, releaseDate;
     ImageView posrterimg, backimg;
+
     movie movi;
     MaterialFavoriteButton materialFavoriteButton;
 
     //Viewmodel
     private FavoriteViewModel noteViewModel;
     private Boolean isFavorite = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +141,7 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    public void saveFavorite() {
+    private void saveFavorite() {
         //Viewmodel
         noteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
         LiveData<Favorite> fs = null;
@@ -160,14 +164,14 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    public void deleteFavorite(int movie_id) {
+    private void deleteFavorite(int movie_id) {
         noteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
         //Viewmodel
         noteViewModel.delete(movie_id);
         movi.setFavorite(false);
     }
 
-    public void is_itFavoriteMovie(final int movie_id) {
+    private void is_itFavoriteMovie(final int movie_id) {
 
         noteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
         final Boolean fav = false;
@@ -191,7 +195,7 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    public void Trailerload_data() {
+    private void Trailerload_data() {
         // Trailer adapter
         trailerList = new ArrayList<>();
         adapter = new TrailerAdapter(this, trailerList);
@@ -238,7 +242,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    public void Review_load_data() {
+    private void Review_load_data() {
         // Review adapter
         ReviewList = new ArrayList<>();
         Review_adapter = new ReviewAdapter(this, ReviewList);
@@ -285,7 +289,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    public void Cast_load_data() {
+    private void Cast_load_data() {
 
         // Cast_ adapter
         CastList = new ArrayList<>();
@@ -331,7 +335,6 @@ public class DetailActivity extends AppCompatActivity {
 
         }
     }
-
 
 }
 

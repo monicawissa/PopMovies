@@ -1,4 +1,4 @@
-package com.example.moka.popmovies;
+package com.example.moka.popmovies.utilities;
 
 
 import android.animation.AnimatorSet;

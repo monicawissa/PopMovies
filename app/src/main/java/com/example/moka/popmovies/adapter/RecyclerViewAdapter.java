@@ -9,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.example.moka.popmovies.DetailActivity;
+import com.example.moka.popmovies.UI.DetailActivity;
 import com.example.moka.popmovies.R;
 import com.example.moka.popmovies.jsonmovie.movie;
 import com.squareup.picasso.Picasso;
@@ -20,14 +18,11 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.moka.popmovies.jsonmovie.movie.*;
-
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private int previousPosition = 0;
 
-    private List<movie> List_Item=new ArrayList<>();
+    private List<movie> List_Item = new ArrayList<>();
     private Context context;
 
     public RecyclerViewAdapter(List<movie> list_Item, Context context) {
@@ -100,4 +95,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
     }
+
+
+
+
+
 }

@@ -61,4 +61,5 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
             reviewcontent = (TextView) view.findViewById(R.id.review);
         }
     }
+
 }
