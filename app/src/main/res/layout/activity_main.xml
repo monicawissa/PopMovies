@@ -24,6 +24,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
+            android:background="@drawable/cinema"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
 
