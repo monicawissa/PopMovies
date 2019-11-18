@@ -1,4 +1,4 @@
-package com.example.moka.popmovies.adapter;
+package com.example.moka.popmovies.UI.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.moka.popmovies.UI.DetailActivity;
+import com.example.moka.popmovies.UI.Movie_Details.DetailActivity;
 import com.example.moka.popmovies.R;
 import com.example.moka.popmovies.jsonmovie.movie;
 import com.squareup.picasso.Picasso;

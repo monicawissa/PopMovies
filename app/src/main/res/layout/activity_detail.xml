@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/white"
-    tools:context=".UI.DetailActivity">
+    tools:context=".UI.Movie_Details.DetailActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

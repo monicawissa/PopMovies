@@ -1,4 +1,4 @@
-package com.example.moka.popmovies.UI;
+package com.example.moka.popmovies.UI.Movie_Details;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -21,9 +21,6 @@ import com.example.moka.popmovies.utilities.CheckInternetConnection;
 import com.example.moka.popmovies.R;
 import com.example.moka.popmovies.Room.Favorite;
 import com.example.moka.popmovies.Room.FavoriteViewModel;
-import com.example.moka.popmovies.adapter.ActorsAdapter;
-import com.example.moka.popmovies.adapter.ReviewAdapter;
-import com.example.moka.popmovies.adapter.TrailerAdapter;
 import com.example.moka.popmovies.api.client;
 import com.example.moka.popmovies.api.service;
 import com.example.moka.popmovies.jsonmovie.ActorResult;
@@ -45,8 +42,7 @@ public class DetailActivity extends AppCompatActivity {
     //trailer recycleview
     private RecyclerView recyclerView;
     private TrailerAdapter adapter;
-    private List<Trailer> trailerList;
-    private int movie_id;
+    private List<Trailer> TrailerList;
 
     //Review recycleview
     private RecyclerView Review_recyclerView;
@@ -64,10 +60,13 @@ public class DetailActivity extends AppCompatActivity {
     ImageView posrterimg, backimg;
 
     movie movi;
+    private int movie_id;
     MaterialFavoriteButton materialFavoriteButton;
 
     //Viewmodel
     private FavoriteViewModel noteViewModel;
+    private movieViewModel movieVM;
+
     private Boolean isFavorite = false;
 
 
@@ -75,6 +74,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        movieVM=ViewModelProviders.of(this).get(movieViewModel.class);
 
         Intent intent = getIntent();
 
@@ -197,13 +197,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private void Trailerload_data() {
         // Trailer adapter
-        trailerList = new ArrayList<>();
-        adapter = new TrailerAdapter(this, trailerList);
+        TrailerList = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.trailerRcl);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(),
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapter);
 
 
         CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
@@ -216,24 +214,16 @@ public class DetailActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    Call<TrailerResult> call = null;
-                    service myapi = new client().getRetrofit().create(service.class);
-                    call = myapi.getMovieTrailer(movie_id, BuildConfig.The_MovieDBapiToke);
-
-                    call.enqueue(new Callback<TrailerResult>() {
+                    movieVM.getMovieTrailer(movie_id);
+                    movieVM.TrailerItems.observe(this, new Observer<List<Trailer>>() {
                         @Override
-                        public void onResponse(Call<TrailerResult> call, retrofit2.Response<TrailerResult> response) {
-
-                            trailerList = response.body().getTrailers();
-                            recyclerView.setAdapter(new TrailerAdapter(getApplicationContext(), trailerList));
+                        public void onChanged(@Nullable List<Trailer> trailers) {
+                            TrailerList=trailers;
+                            recyclerView.setAdapter(new TrailerAdapter(getApplicationContext(), trailers));
                             recyclerView.smoothScrollToPosition(0);
                         }
-
-                        @Override
-                        public void onFailure(Call<TrailerResult> call, Throwable t) {
-                            Toast.makeText(getApplicationContext(), "Can't Fetch the data ", Toast.LENGTH_SHORT).show();
-                        }
                     });
+
                 }
             } catch (Exception e) {
                 Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();
@@ -245,12 +235,10 @@ public class DetailActivity extends AppCompatActivity {
     private void Review_load_data() {
         // Review adapter
         ReviewList = new ArrayList<>();
-        Review_adapter = new ReviewAdapter(this, ReviewList);
         Review_recyclerView = (RecyclerView) findViewById(R.id.reviewsRcl);
         RecyclerView.LayoutManager Review_mLayoutManager = new LinearLayoutManager(getApplicationContext(),
                 LinearLayoutManager.HORIZONTAL, false);
         Review_recyclerView.setLayoutManager(Review_mLayoutManager);
-        Review_recyclerView.setAdapter(Review_adapter);
 
 
         CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
@@ -263,24 +251,16 @@ public class DetailActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    Call<ReviewResult> call = null;
-                    service myapi = new client().getRetrofit().create(service.class);
-                    call = myapi.getReviewTrailer(movie_id, BuildConfig.The_MovieDBapiToke);
-
-                    call.enqueue(new Callback<ReviewResult>() {
+                    movieVM.getReviewTrailer(movie_id);
+                    movieVM.ReviewItems.observe(this, new Observer<List<Review>>() {
                         @Override
-                        public void onResponse(Call<ReviewResult> call, retrofit2.Response<ReviewResult> response) {
-
-                            ReviewList = response.body().getResults();
-                            Review_recyclerView.setAdapter(new ReviewAdapter(getApplicationContext(), ReviewList));
+                        public void onChanged(@Nullable List<Review> reviews) {
+                            ReviewList=reviews;
+                            Review_recyclerView.setAdapter(new ReviewAdapter(getApplicationContext(), reviews));
                             Review_recyclerView.smoothScrollToPosition(0);
                         }
-
-                        @Override
-                        public void onFailure(Call<ReviewResult> call, Throwable t) {
-                            Toast.makeText(getApplicationContext(), "Can't Fetch the data ", Toast.LENGTH_SHORT).show();
-                        }
                     });
+
                 }
             } catch (Exception e) {
                 Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();
@@ -293,12 +273,10 @@ public class DetailActivity extends AppCompatActivity {
 
         // Cast_ adapter
         CastList = new ArrayList<>();
-        Cast_adapter = new ActorsAdapter(this, CastList);
         Cast_recyclerView = (RecyclerView) findViewById(R.id.castRcl);
         RecyclerView.LayoutManager Cast_mLayoutManager = new LinearLayoutManager(getApplicationContext(),
                 LinearLayoutManager.HORIZONTAL, false);
         Cast_recyclerView.setLayoutManager(Cast_mLayoutManager);
-        Cast_recyclerView.setAdapter(Cast_adapter);
 
         CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
         Boolean Ch = cic.isConnectingToInternet();
@@ -310,24 +288,16 @@ public class DetailActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    Call<ActorResult> call = null;
-                    service myapi = new client().getRetrofit().create(service.class);
-                    call = myapi.getActorsMovies(movie_id, BuildConfig.The_MovieDBapiToke);
-
-                    call.enqueue(new Callback<ActorResult>() {
+                    movieVM.getActorsMovies(movie_id);
+                    movieVM.CastItems.observe(this, new Observer<List<Cast>>() {
                         @Override
-                        public void onResponse(Call<ActorResult> call, retrofit2.Response<ActorResult> response) {
-
-                            CastList = response.body().getCast();
-                            Cast_recyclerView.setAdapter(new ActorsAdapter(getApplicationContext(), CastList));
+                        public void onChanged(@Nullable List<Cast> casts) {
+                            CastList=casts;
+                            Cast_recyclerView.setAdapter(new ActorsAdapter(getApplicationContext(), casts));
                             Cast_recyclerView.smoothScrollToPosition(0);
                         }
-
-                        @Override
-                        public void onFailure(Call<ActorResult> call, Throwable t) {
-                            Toast.makeText(getApplicationContext(), "Can't Fetch the data ", Toast.LENGTH_SHORT).show();
-                        }
                     });
+
                 }
             } catch (Exception e) {
                 Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();

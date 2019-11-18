@@ -1,12 +1,9 @@
-package com.example.moka.popmovies.UI;
+package com.example.moka.popmovies.UI.main;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,24 +19,14 @@ import com.example.moka.popmovies.utilities.CheckInternetConnection;
 import com.example.moka.popmovies.R;
 import com.example.moka.popmovies.Room.Favorite;
 import com.example.moka.popmovies.Room.FavoriteViewModel;
-import com.example.moka.popmovies.adapter.RecyclerViewAdapter;
-import com.example.moka.popmovies.api.client;
-import com.example.moka.popmovies.api.service;
-import com.example.moka.popmovies.jsonmovie.MovieResults;
 import com.example.moka.popmovies.jsonmovie.movie;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-
 public class MainActivity extends AppCompatActivity {
     // choosing by default menu1
     // menu1 = popular...menu2 = top rate...menu3 = favorite
-
-    // the needed data of api query
-    private final String language="en-US";
 
     //choosing the sort order "popular or TopRated or favorite"
     // choosing by default popular
@@ -52,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Viewmodel
     private FavoriteViewModel nodeViewModel;
-    
+    private clientViewModel clientVM;
     //save state
     private static String LIST_STATE = "list_state";
     private Parcelable savedRecyclerLayoutState;
@@ -63,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        recyclerView = (RecyclerView) findViewById(R.id.m_RecyclerView);
+        clientVM=ViewModelProviders.of(this).get(clientViewModel.class);
+        recyclerView =  findViewById(R.id.m_RecyclerView);
         recyclerView.setHasFixedSize(true);
 
         //handling if it's in portrait position or in the rotation position
@@ -87,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void displayDataFromInstanceState(){
-       recyclerView_dAdapter = new RecyclerViewAdapter(moviesInstance, this);
+        recyclerView_dAdapter = new RecyclerViewAdapter(moviesInstance, this);
 
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recyclerView_dAdapter);
@@ -123,20 +110,30 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                Call<MovieResults> call=null;
-                service myapi= new client().getRetrofit().create(service.class);
-
-
                 Log.d("TAG",""+view_sort);
 
                 if(view_sort==1) {
-                    call = myapi.getpopularMovies(BuildConfig.The_MovieDBapiToke, language, "1");
-                    api_request(call);
+                    clientVM.getpopularMovies();
+                    clientVM.listItems.observe(this, new Observer<List<movie>>() {
+                        @Override
+                        public void onChanged(@Nullable List<movie> movies) {
+                            moviesInstance.addAll(movies);
+                            recyclerView.setAdapter(new RecyclerViewAdapter(movies, getApplicationContext()));
+                            recyclerView.smoothScrollToPosition(0);
+                        }
+                    });
+
                 }
                 else if(view_sort==2){
-                    call=myapi.getTopRatedMovies(BuildConfig.The_MovieDBapiToke,language,"1");
-                    api_request(call);
+                    clientVM.getTopRatedMovies();
+                    clientVM.listItems.observe(this, new Observer<List<movie>>() {
+                        @Override
+                        public void onChanged(@Nullable List<movie> movies) {
+                            moviesInstance.addAll(movies);
+                            recyclerView.setAdapter(new RecyclerViewAdapter(movies, getApplicationContext()));
+                            recyclerView.smoothScrollToPosition(0);
+                        }
+                    });
                 }
                 else {
                     view_favorites();
@@ -148,23 +145,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-    }
-
-    private void api_request(Call<MovieResults> call){
-        call.enqueue(new Callback<MovieResults>() {
-            @Override
-            public void onResponse(Call<MovieResults> call, retrofit2.Response<MovieResults> response) {
-                List<movie> listItems=response.body().getResults();
-                moviesInstance.addAll(listItems);
-                recyclerView.setAdapter(new RecyclerViewAdapter(listItems, getApplicationContext()));
-                recyclerView.smoothScrollToPosition(0);
-            }
-
-            @Override
-            public void onFailure(Call<MovieResults> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Can't Fetch the data ", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void view_favorites(){

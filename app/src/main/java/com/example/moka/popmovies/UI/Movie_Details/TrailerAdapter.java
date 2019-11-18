@@ -1,4 +1,4 @@
-package com.example.moka.popmovies.adapter;
+package com.example.moka.popmovies.UI.Movie_Details;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.moka.popmovies.R;
 import com.example.moka.popmovies.jsonmovie.Trailer;
 import com.squareup.picasso.Picasso;
