@@ -1,10 +1,10 @@
-package com.example.moka.popmovies.jsonmovie;
+package com.example.moka.popmovies.Models;
 
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -37,7 +37,7 @@ public class ActorResult implements Parcelable
 
     protected ActorResult(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        in.readList(this.cast, (com.example.moka.popmovies.jsonmovie.Cast.class.getClassLoader()));
+        in.readList(this.cast, (com.example.moka.popmovies.Models.Cast.class.getClassLoader()));
     }
 
     public ActorResult() {

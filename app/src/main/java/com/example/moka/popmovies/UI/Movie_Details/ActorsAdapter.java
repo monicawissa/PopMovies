@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.jsonmovie.Cast;
+import com.example.moka.popmovies.Models.Cast;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

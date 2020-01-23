@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,44 +14,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.moka.popmovies.BuildConfig;
-import com.example.moka.popmovies.utilities.CheckInternetConnection;
+import com.example.moka.popmovies.Models.Trailer;
 import com.example.moka.popmovies.R;
 import com.example.moka.popmovies.Room.Favorite;
 import com.example.moka.popmovies.Room.FavoriteViewModel;
-import com.example.moka.popmovies.api.client;
-import com.example.moka.popmovies.api.service;
-import com.example.moka.popmovies.jsonmovie.ActorResult;
-import com.example.moka.popmovies.jsonmovie.Cast;
-import com.example.moka.popmovies.jsonmovie.Review;
-import com.example.moka.popmovies.jsonmovie.ReviewResult;
-import com.example.moka.popmovies.jsonmovie.Trailer;
-import com.example.moka.popmovies.jsonmovie.TrailerResult;
-import com.example.moka.popmovies.jsonmovie.movie;
+import com.example.moka.popmovies.Models.movie;
+import com.example.moka.popmovies.utilities.ActivityUtils;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-
 public class DetailActivity extends AppCompatActivity {
-    //trailer recycleview
-    private RecyclerView recyclerView;
-    private TrailerAdapter adapter;
-    private List<Trailer> TrailerList;
-
-    //Review recycleview
-    private RecyclerView Review_recyclerView;
-    private ReviewAdapter Review_adapter;
-    private List<Review> ReviewList;
-
-
-    //Cast recycleview
-    private RecyclerView Cast_recyclerView;
-    private ActorsAdapter Cast_adapter;
-    private List<Cast> CastList;
 
 
     TextView nameofmovie, plotsynopsis, uesrRating, releaseDate;
@@ -65,16 +34,16 @@ public class DetailActivity extends AppCompatActivity {
 
     //Viewmodel
     private FavoriteViewModel noteViewModel;
-    private movieViewModel movieVM;
 
     private Boolean isFavorite = false;
 
-
+    TrailerFragment trailerFragment;
+    ReviewFragment reviewFragment;
+    CastFragment castFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        movieVM=ViewModelProviders.of(this).get(movieViewModel.class);
 
         Intent intent = getIntent();
 
@@ -105,14 +74,28 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
+        reviewFragment=(ReviewFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentReview);
+        castFragment=(CastFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentcast);
+        trailerFragment=(TrailerFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentTrailer);
 
-
-
-        Trailerload_data();
-
-        Review_load_data();
-
-        Cast_load_data();
+        if(castFragment==null||!castFragment.isAdded()){
+            castFragment= CastFragment.newInstance();
+            //getFragmentManager().beginTransaction().add(R.id.frame_movies,fragment).commit();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),castFragment,R.id.frame_cast);
+            castFragment.setattribute(movie_id);
+        }
+        if(reviewFragment==null||!reviewFragment.isAdded()){
+            reviewFragment= ReviewFragment.newInstance();
+            reviewFragment.setattribute(movie_id);
+            //getFragmentManager().beginTransaction().add(R.id.frame_movies,fragment).commit();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),reviewFragment,R.id.frame_Review);
+        }
+        if(trailerFragment==null||!trailerFragment.isAdded()){
+            trailerFragment= TrailerFragment.newInstance();
+            trailerFragment.setattribute(movie_id);
+            //getFragmentManager().beginTransaction().add(R.id.frame_movies,fragment).commit();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),trailerFragment,R.id.frame_trailer);
+        }
 
     }
 
@@ -195,116 +178,113 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    private void Trailerload_data() {
-        // Trailer adapter
-        TrailerList = new ArrayList<>();
-        recyclerView = (RecyclerView) findViewById(R.id.trailerRcl);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(),
-                LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(mLayoutManager);
-
-
-        CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
-        Boolean Ch = cic.isConnectingToInternet();
-        if (!Ch) {
-            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                if (BuildConfig.The_MovieDBapiToke.isEmpty()) {
-                    Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    movieVM.getMovieTrailer(movie_id);
-                    movieVM.TrailerItems.observe(this, new Observer<List<Trailer>>() {
-                        @Override
-                        public void onChanged(@Nullable List<Trailer> trailers) {
-                            TrailerList=trailers;
-                            recyclerView.setAdapter(new TrailerAdapter(getApplicationContext(), trailers));
-                            recyclerView.smoothScrollToPosition(0);
-                        }
-                    });
-
-                }
-            } catch (Exception e) {
-                Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
-    private void Review_load_data() {
-        // Review adapter
-        ReviewList = new ArrayList<>();
-        Review_recyclerView = (RecyclerView) findViewById(R.id.reviewsRcl);
-        RecyclerView.LayoutManager Review_mLayoutManager = new LinearLayoutManager(getApplicationContext(),
-                LinearLayoutManager.HORIZONTAL, false);
-        Review_recyclerView.setLayoutManager(Review_mLayoutManager);
-
-
-        CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
-        Boolean Ch = cic.isConnectingToInternet();
-        if (!Ch) {
-            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                if (BuildConfig.The_MovieDBapiToke.isEmpty()) {
-                    Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    movieVM.getReviewTrailer(movie_id);
-                    movieVM.ReviewItems.observe(this, new Observer<List<Review>>() {
-                        @Override
-                        public void onChanged(@Nullable List<Review> reviews) {
-                            ReviewList=reviews;
-                            Review_recyclerView.setAdapter(new ReviewAdapter(getApplicationContext(), reviews));
-                            Review_recyclerView.smoothScrollToPosition(0);
-                        }
-                    });
-
-                }
-            } catch (Exception e) {
-                Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
-    private void Cast_load_data() {
-
-        // Cast_ adapter
-        CastList = new ArrayList<>();
-        Cast_recyclerView = (RecyclerView) findViewById(R.id.castRcl);
-        RecyclerView.LayoutManager Cast_mLayoutManager = new LinearLayoutManager(getApplicationContext(),
-                LinearLayoutManager.HORIZONTAL, false);
-        Cast_recyclerView.setLayoutManager(Cast_mLayoutManager);
-
-        CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
-        Boolean Ch = cic.isConnectingToInternet();
-        if (!Ch) {
-            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                if (BuildConfig.The_MovieDBapiToke.isEmpty()) {
-                    Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    movieVM.getActorsMovies(movie_id);
-                    movieVM.CastItems.observe(this, new Observer<List<Cast>>() {
-                        @Override
-                        public void onChanged(@Nullable List<Cast> casts) {
-                            CastList=casts;
-                            Cast_recyclerView.setAdapter(new ActorsAdapter(getApplicationContext(), casts));
-                            Cast_recyclerView.smoothScrollToPosition(0);
-                        }
-                    });
-
-                }
-            } catch (Exception e) {
-                Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
+//    private void Trailerload_data() {
+//        // Trailer adapter
+//        TrailerList = new ArrayList<>();
+//        recyclerView = (RecyclerView) findViewById(R.id.trailerRcl);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(),
+//                LinearLayoutManager.HORIZONTAL, false);
+//        recyclerView.setLayoutManager(mLayoutManager);
+//
+//
+//        CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
+//        Boolean Ch = cic.isConnectingToInternet();
+//        if (!Ch) {
+//            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+//        } else {
+//            try {
+//                if (BuildConfig.The_MovieDBapiToke.isEmpty()) {
+//                    Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
+//                    return;
+//                } else {
+//                    new Detailsmovie("Trailer",movie_id).trailerItems.observe(this, new Observer<List<Trailer>>() {
+//                        @Override
+//                        public void onChanged(@Nullable List<Trailer> trailers) {
+//                            TrailerList=trailers;
+//                            recyclerView.setAdapter(new TrailerAdapter(getApplicationContext(), trailers));
+//                            recyclerView.smoothScrollToPosition(0);
+//                        }
+//                    });
+//
+//                }
+//            } catch (Exception e) {
+//                Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
+//    }
+//
+//    private void Review_load_data() {
+//        // Review adapter
+//        ReviewList = new ArrayList<>();
+//        Review_recyclerView = (RecyclerView) findViewById(R.id.reviewsRcl);
+//        RecyclerView.LayoutManager Review_mLayoutManager = new LinearLayoutManager(getApplicationContext(),
+//                LinearLayoutManager.HORIZONTAL, false);
+//        Review_recyclerView.setLayoutManager(Review_mLayoutManager);
+//
+//
+//        CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
+//        Boolean Ch = cic.isConnectingToInternet();
+//        if (!Ch) {
+//            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+//        } else {
+//            try {
+//                if (BuildConfig.The_MovieDBapiToke.isEmpty()) {
+//                    Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
+//                    return;
+//                } else {
+//                    new Detailsmovie("Review",movie_id).reviewItems.observe(this, new Observer<List<Review>>() {
+//                        @Override
+//                        public void onChanged(@Nullable List<Review> reviews) {
+//                            ReviewList=reviews;
+//                            Review_recyclerView.setAdapter(new ReviewAdapter(getApplicationContext(), reviews));
+//                            Review_recyclerView.smoothScrollToPosition(0);
+//                        }
+//                    });
+//
+//                }
+//            } catch (Exception e) {
+//                Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
+//    }
+//
+//    private void Cast_load_data() {
+//
+//        // Cast_ adapter
+//        CastList = new ArrayList<>();
+//        Cast_recyclerView = (RecyclerView) findViewById(R.id.castRcl);
+//        RecyclerView.LayoutManager Cast_mLayoutManager = new LinearLayoutManager(getApplicationContext(),
+//                LinearLayoutManager.HORIZONTAL, false);
+//        Cast_recyclerView.setLayoutManager(Cast_mLayoutManager);
+//
+//        CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
+//        Boolean Ch = cic.isConnectingToInternet();
+//        if (!Ch) {
+//            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+//        } else {
+//            try {
+//                if (BuildConfig.The_MovieDBapiToke.isEmpty()) {
+//                    Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
+//                    return;
+//                } else {
+//                    new Detailsmovie("Actor",movie_id).castItems.observe(this, new Observer<List<Cast>>() {
+//                        @Override
+//                        public void onChanged(@Nullable List<Cast> casts) {
+//                            CastList=casts;
+//                            Cast_recyclerView.setAdapter(new ActorsAdapter(getApplicationContext(), casts));
+//                            Cast_recyclerView.smoothScrollToPosition(0);
+//                        }
+//                    });
+//
+//                }
+//            } catch (Exception e) {
+//                Toast.makeText(this, "Exception Error", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
+//    }
 
 }
 

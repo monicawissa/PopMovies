@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.jsonmovie.Trailer;
+import com.example.moka.popmovies.Models.Trailer;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -44,7 +44,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.MyViewHo
                 .placeholder(R.drawable.img_loading_cover)
                 .error(R.drawable.img_loading_error)
                 .into(viewHolder.thumbnail);
-
     }
 
     @Override

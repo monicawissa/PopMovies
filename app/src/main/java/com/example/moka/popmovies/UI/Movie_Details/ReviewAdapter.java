@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.jsonmovie.Review;
+import com.example.moka.popmovies.Models.Review;
 
 import java.util.List;
 

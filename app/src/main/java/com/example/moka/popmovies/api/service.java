@@ -1,9 +1,9 @@
 package com.example.moka.popmovies.api;
 
-import com.example.moka.popmovies.jsonmovie.ActorResult;
-import com.example.moka.popmovies.jsonmovie.MovieResults;
-import com.example.moka.popmovies.jsonmovie.ReviewResult;
-import com.example.moka.popmovies.jsonmovie.TrailerResult;
+import com.example.moka.popmovies.Models.ActorResult;
+import com.example.moka.popmovies.Models.MovieResults;
+import com.example.moka.popmovies.Models.ReviewResult;
+import com.example.moka.popmovies.Models.TrailerResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

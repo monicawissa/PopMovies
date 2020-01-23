@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.moka.popmovies.UI.Movie_Details.DetailActivity;
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.jsonmovie.movie;
+import com.example.moka.popmovies.Models.movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

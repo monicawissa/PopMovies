@@ -122,13 +122,12 @@
             android:text="@string/cast"
             android:layout_below="@id/overview"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/castRcl"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/frame_cast"
             android:layout_below="@id/labelCaste"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            />
 
         <TextView
             android:id="@+id/labelTrailers"
@@ -136,15 +135,14 @@
             tools:text="Trailers"
             android:text="@string/Trailers"
 
-            android:layout_below="@id/castRcl"/>
-
-        <android.support.v7.widget.RecyclerView
+            android:layout_below="@id/frame_cast"/>
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/trailerRcl"
+            android:id="@+id/frame_trailer"
             android:layout_below="@id/labelTrailers"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            />
+
 
         <TextView
             android:id="@+id/labelReviews"
@@ -152,16 +150,14 @@
             tools:text="Reviews"
             android:text="@string/reviews"
 
-            android:layout_below="@id/trailerRcl"/>
+            android:layout_below="@id/frame_trailer"/>
 
-        <android.support.v7.widget.RecyclerView
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/reviewsRcl"
-
             android:layout_below="@id/labelReviews"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            android:id="@+id/frame_Review"
+            />
 
 
     </RelativeLayout>

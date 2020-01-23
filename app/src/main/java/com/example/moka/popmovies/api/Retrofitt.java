@@ -3,7 +3,7 @@ package com.example.moka.popmovies.api;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
-class retrofitt{
+class Retrofitt {
     private Retrofit retrofit;
     public Retrofit getRetrofit(String base_url, Converter.Factory fac) {
         retrofit=new Retrofit.Builder()
@@ -11,6 +11,5 @@ class retrofitt{
                 .addConverterFactory(fac)
                 .build();
         return retrofit;
-
     }
 }
