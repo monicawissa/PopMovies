@@ -22,7 +22,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class TrailerFragment extends OnlineComponent  {
+public class TrailerFragment extends OnlineComponent  implements IonlineResponse{
     
     public int movie_id;
 
@@ -44,7 +44,7 @@ public class TrailerFragment extends OnlineComponent  {
     }
     public void setattribute(int movie_id) {
         this.movie_id=movie_id;
-        //this.setonlineResponse(this);
+        this.setonlineResponse(this);
         this.execute();
     }
 
@@ -93,6 +93,8 @@ public class TrailerFragment extends OnlineComponent  {
 
 
     private void Trailerload_data(List<Trailer>trailers) {
+        if(trailers==null)return;
+
         // Trailer adapter
         TrailerList = new ArrayList<>();
 

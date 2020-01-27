@@ -31,12 +31,12 @@ public interface service {
     );
 
     @GET("movie/{id}/reviews")
-    Call<ReviewResult> getReviewTrailer(
+    Call<ReviewResult> getMovieReview(
             @Path("id") int id,
             @Query("api_key") String apiKey
     );
     @GET("movie/{id}/casts")
-    Call<ActorResult> getActorsMovies(
+    Call<ActorResult> getMovieActors(
             @Path("id") int id,
             @Query("api_key")String api_key
 

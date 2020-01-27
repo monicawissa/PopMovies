@@ -34,8 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieFragment extends OnlineComponent implements MovieList_contract.View  {
-
+public class MovieFragment extends OnlineComponent implements MovieList_contract.View ,IonlineResponse {
 
     public MovieFragment() {
         // Required empty public constructor
@@ -182,7 +181,7 @@ public class MovieFragment extends OnlineComponent implements MovieList_contract
         if (optionn.equals("favorite"))
             view_favorites();
         else
-        {//this.setonlineResponse(this);
+        {   this.setonlineResponse(this);
             this.execute();}
     }
 

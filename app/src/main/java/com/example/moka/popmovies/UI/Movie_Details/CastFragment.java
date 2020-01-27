@@ -22,7 +22,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CastFragment extends OnlineComponent  {
+public class CastFragment extends OnlineComponent implements IonlineResponse{
     public int movie_id;
 
     //Cast recycleview
@@ -39,7 +39,7 @@ public class CastFragment extends OnlineComponent  {
     }
     public void setattribute(int movie_id) {
         this.movie_id=movie_id;
-        //this.setonlineResponse(this);
+        this.setonlineResponse(this);
 
         this.execute();
     }
@@ -89,7 +89,7 @@ public class CastFragment extends OnlineComponent  {
     
 
     private void Cast_load_data(List<Cast> casts) {
-
+        if(casts==null)return;
         // Cast_ adapter
         CastList = new ArrayList<>();
         

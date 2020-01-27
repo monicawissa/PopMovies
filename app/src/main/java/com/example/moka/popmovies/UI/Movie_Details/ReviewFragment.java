@@ -23,7 +23,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ReviewFragment extends OnlineComponent  {
+public class ReviewFragment extends OnlineComponent implements IonlineResponse {
 
     public int movie_id;
 
@@ -45,7 +45,7 @@ public class ReviewFragment extends OnlineComponent  {
     }
     public void setattribute(int movie_id) {
         this.movie_id=movie_id;
-        //this.setonlineResponse(this);
+        this.setonlineResponse(this);
         this.execute();
     }
 
@@ -93,6 +93,8 @@ public class ReviewFragment extends OnlineComponent  {
 
 
     private void Review_load_data(List<Review> reviews) {
+        if(reviews==null)return;
+
         // Review adapter
         ReviewList = new ArrayList<>();
         CheckInternetConnection cic = new CheckInternetConnection(getActivity());
