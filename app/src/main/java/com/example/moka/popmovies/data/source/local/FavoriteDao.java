@@ -1,13 +1,13 @@
-package com.example.moka.popmovies.Room;
+package com.example.moka.popmovies.data.source.local;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+
+import com.example.moka.popmovies.data.Models.Movie;
 
 import java.util.List;
 
@@ -15,21 +15,21 @@ import java.util.List;
 public interface FavoriteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertFavorite(Favorite FavoriteEntry);
+    void insertFavorite(Movie FavoriteEntry);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateFavorite(Favorite FavoriteEntry);
+    void updateFavorite(Movie FavoriteEntry);
+
+    @Query("DELETE FROM Favorite_table WHERE id =:Favorite_id")
+    void deleteFavoritebyId(int Favorite_id);
 
 
     @Query("SELECT * FROM Favorite_table")
-    LiveData<List<Favorite>> getAllFavorite();
+    List<Movie> getAllFavorite();
 
-    @Query("SELECT *FROM Favorite_table WHERE Favoriteid =:Favoriteid")
-    LiveData<Favorite> getFavoriteById(int Favoriteid);
+    @Query("SELECT *FROM Favorite_table WHERE id =:Favoriteid")
+    Movie getFavoriteById(int Favoriteid);
 
     @Query("DELete From Favorite_table")
     void deletetable();
-
-    @Query("DELETE FROM Favorite_table WHERE Favoriteid =:Favorite_id")
-    void deleteFavoritebyId(int Favorite_id);
 }

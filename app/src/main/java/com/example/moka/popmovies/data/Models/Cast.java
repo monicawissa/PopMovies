@@ -1,4 +1,4 @@
-package com.example.moka.popmovies.Models;
+package com.example.moka.popmovies.data.Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

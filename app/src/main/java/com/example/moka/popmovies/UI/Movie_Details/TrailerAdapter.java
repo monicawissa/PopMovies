@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.Models.Trailer;
+import com.example.moka.popmovies.data.Models.Trailer;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

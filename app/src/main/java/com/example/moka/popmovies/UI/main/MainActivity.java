@@ -1,7 +1,5 @@
 package com.example.moka.popmovies.UI.main;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,11 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.moka.popmovies.BuildConfig;
+import com.example.moka.popmovies.data.source.AppRepository;
 import com.example.moka.popmovies.utilities.ActivityUtils;
-import com.example.moka.popmovies.utilities.CheckInternetConnection;
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.Room.FavoriteViewModel;
+import com.example.moka.popmovies.utilities.Injection;
 
 public class MainActivity extends AppCompatActivity {
     // choosing by default menu1
@@ -21,69 +18,51 @@ public class MainActivity extends AppCompatActivity {
 
     //choosing the sort order "popular or TopRated or favorite"
     // choosing by default popular
-    private int view_sort=1;
-
-
-
-
+    private MoviesFilterType moviesFilterType=MoviesFilterType.popular;
+    private static final String sort_KEY = "SORT_KEY";
     private MovieFragment fragment;
     private MovieListPresenter movieListPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //fragment=(MovieFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentMovie);
-        Get_All_movies();
-    }
-
-
-       private void Get_All_movies() {
-
-        CheckInternetConnection cic = new CheckInternetConnection(getApplicationContext());
-        Boolean Ch = cic.isConnectingToInternet();
-        if (!Ch) {
-            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-        }
-        else {
+            fragment=(MovieFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentMovie);
             try {
-                //naming convention
-                if(BuildConfig.the_movie_db_API_token.isEmpty()){
-                    Toast.makeText(this, getString(R.string.api_NotFound), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Log.d("TAG",""+view_sort);
-                String option ="popular";
-                switch (view_sort){
-                    case 2:option="top";break;
-                    case 3:option="favorite";break;
-                    default:
-                }
                 if(fragment==null){
-                    fragment= new MovieFragment();
-                    fragment.setattribute(option);
-                    //getFragmentManager().beginTransaction().add(R.id.frame_movies,fragment).commit();
+                    fragment= MovieFragment.getInstance();
                     ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.frame_movies);
                 }
-                else{
-                    fragment.refresh(option);
+                movieListPresenter=new MovieListPresenter(fragment,
+                        Injection.provideTasksRepository(getApplicationContext(),"https://api.themoviedb.org/3/")
+                );
+                // Load previously saved state, if available.
+                if (savedInstanceState != null) {
+                    MoviesFilterType currentFiltering =
+                            (MoviesFilterType) savedInstanceState.getSerializable(sort_KEY);
+                    movieListPresenter.setFiltering(currentFiltering);
                 }
-                //movieListPresenter=new MovieListPresenter((FragmentActivity)this,fragment);
-
             }catch (Exception e){
                 Toast.makeText(this,e.toString(), Toast.LENGTH_LONG).show();
                 Log.d("taggg", "Get_All_movies: ."+e);
             }
 
         }
-    }
 
 
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(sort_KEY, movieListPresenter.getFiltering());
+
+        super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(view_sort==1){
+        if(moviesFilterType==MoviesFilterType.popular){
             getMenuInflater().inflate(R.menu.menu1,menu);}
-        else if(view_sort==2) {
+        else if(moviesFilterType==MoviesFilterType.top) {
             getMenuInflater().inflate(R.menu.menu2,menu);
         }
         else{
@@ -96,28 +75,25 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
         if(id==R.id.delete_all_favorite){
-            FavoriteViewModel nodeViewModel=ViewModelProviders.of(this).get(FavoriteViewModel.class);
-            nodeViewModel.deleteall();
-            Toast.makeText(MainActivity.this,"All Favorite movies are deleted", Toast.LENGTH_SHORT).show();
-
+            movieListPresenter.setFiltering(MoviesFilterType.deleteAllFavorite);
         }
-        if(id==R.id.popular_menu && view_sort!=1){
+        if(id==R.id.popular_menu && !(moviesFilterType==MoviesFilterType.popular)){
             //change to menu1
-            view_sort=1;
+            movieListPresenter.setFiltering(MoviesFilterType.popular);
+            moviesFilterType=MoviesFilterType.popular;
             invalidateOptionsMenu();
-            Get_All_movies();
         }
-        if(id==R.id.topRated_menu && view_sort!=2){
+        if(id==R.id.topRated_menu && !(moviesFilterType==MoviesFilterType.top)){
             //change to menu2
-            view_sort=2;
+            movieListPresenter.setFiltering(MoviesFilterType.top);
+            moviesFilterType=MoviesFilterType.top;
             invalidateOptionsMenu();
-            Get_All_movies();
         }
-        if(id==R.id.favorite_menu && view_sort!=3){
+        if(id==R.id.favorite_menu && !(moviesFilterType==MoviesFilterType.favorite)){
             //change to menu2
-            view_sort=3;
+            movieListPresenter.setFiltering(MoviesFilterType.favorite);
+            moviesFilterType=MoviesFilterType.favorite;
             invalidateOptionsMenu();
-            Get_All_movies();
         }
         return super.onOptionsItemSelected(item);
     }

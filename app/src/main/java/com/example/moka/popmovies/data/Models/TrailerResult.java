@@ -1,4 +1,4 @@
-package com.example.moka.popmovies.Models;
+package com.example.moka.popmovies.data.Models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class TrailerResult implements Parcelable
 
     protected TrailerResult(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        in.readList(this.Trailers, (com.example.moka.popmovies.Models.Trailer.class.getClassLoader()));
+        in.readList(this.Trailers, (com.example.moka.popmovies.data.Models.Trailer.class.getClassLoader()));
     }
 
     public TrailerResult() {

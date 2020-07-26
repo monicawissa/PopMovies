@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.moka.popmovies.UI.Movie_Details.DetailActivity;
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.Models.movie;
+import com.example.moka.popmovies.data.Models.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,10 +22,10 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    private List<movie> List_Item = new ArrayList<>();
+    private List<Movie> List_Item = new ArrayList<>();
     private Context context;
 
-    public RecyclerViewAdapter(List<movie> list_Item, Context context) {
+    public RecyclerViewAdapter(List<Movie> list_Item, Context context) {
         List_Item = list_Item;
         this.context = context;
     }
@@ -55,13 +55,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
     //Viewmodel**
-    public movie getmovieAt(int position){
+    public Movie getmovieAt(int position){
         return List_Item.get(position);
     }
 
     //Viewmodel
-    public void setmovies(List<movie> movies) {
-        this.List_Item = movies;
+    public void setmovies(List<Movie> Movies) {
+        this.List_Item = Movies;
         notifyDataSetChanged();
     }
     @Override
@@ -85,9 +85,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onClick(View v) {
                     int i=getAdapterPosition();
                     if(i!=RecyclerView.NO_POSITION){
-                        movie movieclicked=List_Item.get(i);
+                        Movie movieclicked=List_Item.get(i);
                         Intent intent=new Intent(context,DetailActivity.class);
-                        intent.putExtra("movies",movieclicked);
+                        intent.putExtra("movie",movieclicked);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }

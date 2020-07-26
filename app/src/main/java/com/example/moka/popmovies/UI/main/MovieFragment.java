@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,14 +18,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.Room.Favorite;
-import com.example.moka.popmovies.Room.FavoriteViewModel;
-import com.example.moka.popmovies.api.IonlineResponse;
-import com.example.moka.popmovies.api.OnlineComponent;
-import com.example.moka.popmovies.Models.movie;
+import com.example.moka.popmovies.data.Models.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +32,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieFragment extends OnlineComponent implements MovieList_contract.View ,IonlineResponse {
+public class MovieFragment extends Fragment implements MovieList_contract.View {
 
     public MovieFragment() {
         // Required empty public constructor
     }
-
+    public static MovieFragment getInstance(){
+        return new MovieFragment();
+    }
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerView_dAdapter;
 
@@ -47,22 +47,22 @@ public class MovieFragment extends OnlineComponent implements MovieList_contract
     //save state
     private static String LIST_STATE = "list_state";
     private static final String BUNDLE_RECYCLER_LAYOUT = "recycler_layout";
-    private ArrayList<movie> moviesInstance = new ArrayList<>();
+    private ArrayList<Movie> moviesInstance = new ArrayList<>();
     private MovieList_contract.Presenter mPresenter;
-    public String optionn;
+    private ProgressBar pgsBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_movie, container, false);
 
-
+        pgsBar = (ProgressBar)root.findViewById(R.id.progress_bar);
         recyclerView = root.findViewById(R.id.m_RecyclerView);
         recyclerView.setHasFixedSize(true);
-
         //handling if it's in portrait position or in the rotation position
         GridLayoutManager gridLayoutManager;
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (this.getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_PORTRAIT) {
             gridLayoutManager = new GridLayoutManager(getActivity(), 2);
             recyclerView.setLayoutManager(gridLayoutManager);
         } else {
@@ -74,10 +74,16 @@ public class MovieFragment extends OnlineComponent implements MovieList_contract
             savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
             displayDataFromInstanceState();
         } else {
-            this.refresh(optionn);
+            mPresenter.execute(false);
         }
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //mPresenter.start();
     }
 
     private void displayDataFromInstanceState() {
@@ -106,94 +112,47 @@ public class MovieFragment extends OnlineComponent implements MovieList_contract
         super.onActivityCreated(savedInstanceState);
     }
 
-    public void setattribute(String option) {
-        this.optionn = option;
-    }
-
-    @Override
-    public String getPath() {
-        return "https://api.themoviedb.org/3/";
-    }
-
-    @Override
-    public void getAttribute() {
-        setOption(optionn);
-    }
-
-    @Override
-    public void onDataFetched(Object data) {
-        if (optionn.equals("top") || optionn.equals("popular")) {
-            moviesInstance.addAll((List<movie>) data);
-            showData();
-        }
-    }
-
     public void showData() {
         recyclerView_dAdapter=new RecyclerViewAdapter(moviesInstance, getActivity());
         recyclerView.setAdapter(recyclerView_dAdapter);
         recyclerView_dAdapter.notifyDataSetChanged();
         recyclerView.smoothScrollToPosition(0);
     }
-
-    @Override
-    public void onDataError() {
-        Toast.makeText(getActivity(), "Can't Fetch the data ", Toast.LENGTH_SHORT).show();
-    }
-
-    public void view_favorites() {
-        //mPresenter.get_favorites_Presenter();
-        FavoriteViewModel nodeViewModel = ViewModelProviders.of((FragmentActivity) checkNotNull(getActivity())).get(FavoriteViewModel.class);
-        nodeViewModel.getAllFavorites().observe((LifecycleOwner)this,new Observer<List<Favorite>>(){
-
-            @Override
-            public void onChanged(@Nullable List<Favorite> notes) {
-                //update RecycleViewAdapter
-
-                List<movie> movies = new ArrayList<>();
-                if(notes==null){
-                    Toast.makeText(getActivity(),R.string.null_data, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //assert notes!=null;
-                for (Favorite i :notes ){
-                    movie movie = new movie();
-                    movie.setId(i.getFavoriteid());
-                    movie.setOverview(i.getOverview());
-                    movie.setTitle(i.getTitle());
-                    movie.setOriginalTitle(i.getTitle());
-                    movie.setReleaseDate(i.getReleaseDate());
-                    movie.setBackdropPath(i.getBackdropPath());
-                    movie.setPosterPath(i.getPosterpath());
-                    movie.setVoteAverage(i.getUserrating());
-                    movie.setFavorite(true);
-                    movies.add(movie);
-                }
-                Log.d("TAGGG", "favorite movie size "+movies.size());
-                moviesInstance.addAll(movies);
-                showData();
-            }
-        });
-    }
-
-    public void refresh(String optionn) {
-        this.optionn = optionn;
-        moviesInstance.clear();
-        if (optionn.equals("favorite"))
-            view_favorites();
-        else
-        {   this.setonlineResponse(this);
-            this.execute();}
-    }
-
     @Override
     public void setPresenter(MovieList_contract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
     @Override
-    public void showFavoriteMovies(List<movie> movies) {
-        moviesInstance.addAll(movies);
+    public void setLoadingIndicator(boolean active) {
+        if(active){
+            pgsBar.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+        else {
+            pgsBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+        //Toast.makeText(this.getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void showMovies(List<Movie> Movies) {
+        moviesInstance.clear();
+        moviesInstance.addAll(Movies);
         showData();
+    }
+
+    @Override
+    public void showSuccessfullyDeleteFavoritesMessage() {
+        Snackbar.make(getView(), "success delete Movies", Snackbar.LENGTH_LONG).show();
+
     }
 
     @Override

@@ -6,11 +6,25 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:id="@+id/fragmentMovie">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:visibility="visible"
+        android:layout_marginLeft="155dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/m_RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         card_view:carElevation="5dp"
+        android:visibility="gone"
+
         card_view:cardUseCopmatPadding="true"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

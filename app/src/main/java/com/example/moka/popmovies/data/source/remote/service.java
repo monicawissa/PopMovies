@@ -1,9 +1,9 @@
-package com.example.moka.popmovies.api;
+package com.example.moka.popmovies.data.source.remote;
 
-import com.example.moka.popmovies.Models.ActorResult;
-import com.example.moka.popmovies.Models.MovieResults;
-import com.example.moka.popmovies.Models.ReviewResult;
-import com.example.moka.popmovies.Models.TrailerResult;
+import com.example.moka.popmovies.data.Models.ActorResult;
+import com.example.moka.popmovies.data.Models.MovieResults;
+import com.example.moka.popmovies.data.Models.ReviewResult;
+import com.example.moka.popmovies.data.Models.TrailerResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -1,5 +1,5 @@
 
-package com.example.moka.popmovies.Models;
+package com.example.moka.popmovies.data.Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -22,7 +22,7 @@ public class MovieResults implements Parcelable
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    private List<movie> results = null;
+    private List<Movie> results = null;
     private final static long serialVersionUID = -3365560000391086144L;
 
     public Integer getPage() {
@@ -49,11 +49,11 @@ public class MovieResults implements Parcelable
         this.totalPages = totalPages;
     }
 
-    public List<movie> getResults() {
+    public List<Movie> getResults() {
         return results;
     }
 
-    public void setResults(List<movie> results) {
+    public void setResults(List<Movie> results) {
         this.results = results;
     }
 
@@ -75,7 +75,7 @@ public class MovieResults implements Parcelable
 
     protected MovieResults(Parcel in) {
         this.page = in.readInt();
-        this.results = in.createTypedArrayList(movie.CREATOR);
+        this.results = in.createTypedArrayList(Movie.CREATOR);
         this.totalResults = in.readInt();
         this.totalPages = in.readInt();
     }
