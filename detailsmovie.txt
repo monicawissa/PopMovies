@@ -12,10 +12,10 @@ import android.widget.Toast;
 
 import com.example.moka.popmovies.BuildConfig;
 import com.example.moka.popmovies.R;
-import com.example.moka.popmovies.api.OnlineComponent;
-import com.example.moka.popmovies.Models.Cast;
-import com.example.moka.popmovies.Models.Review;
-import com.example.moka.popmovies.Models.Trailer;
+import com.example.moka.popmovies.data.source.remote.OnlineComponent;
+import com.example.moka.popmovies.data.Models.Cast;
+import com.example.moka.popmovies.data.Models.Review;
+import com.example.moka.popmovies.data.Models.Trailer;
 import com.example.moka.popmovies.utilities.CheckInternetConnection;
 
 import java.util.ArrayList;
